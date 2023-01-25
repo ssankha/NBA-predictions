@@ -26,9 +26,15 @@ def main():
 
             # iterate through the rows 
             for i in range(len(games)):
+                #nba_results.write(str(games[i]) + "\n\n")
                 game = games[i]
+                visitor_team = game.find('td', attrs={'class':'left'}).find('a')
 
-                
+            
+            
+
+
+
 
 
 
