@@ -5,11 +5,11 @@ from sklearn.linear_model import Ridge
 import requests
 from bs4 import BeautifulSoup
 
-def main():
+def scrape():
     # the url of the website to be scraped
     # the months that have happened
     base_url = 'https://www.basketball-reference.com/leagues/NBA_2023_games-'
-    months_played = ['october', 'november', 'december', 'january']
+    months_played = ['october', 'november', 'december', 'january', 'march', 'april', 'may']
     
     # scrape the match history from the months that have been played
     # place the match history in a CSV file called nba_results.csv
@@ -24,11 +24,30 @@ def main():
             table = soup.find('table', attrs={'id':'schedule'}).find('tbody')
             games = table.find_all('tr')
 
-            # iterate through the rows 
+            # iterate through the rows
             for i in range(len(games)):
                 #nba_results.write(str(games[i]) + "\n\n")
                 game = games[i]
-                visitor_team = game.find('td', attrs={'class':'left'}).find('a')
+                
+                # get the visitor team
+                visitor_team = game.find('td', attrs={'data-stat':"visitor_team_name"}).find('a').contents[0]
+                
+                # get the visitor's points
+                visitor_points = game.find('td', attrs={'data-stat':'visitor_pts'}).contents[0]
+                
+                # get the home team
+                home_team = game.find('td', attrs={'data-stat':"home_team_name"}).find('a').contents[0]
+                
+                # get the home team's points
+                home_points = game.find('td', attrs={'data-stat':'home_pts'}).contents[0]
+
+                # write to the file
+                
+                
+                print(visitor_team, visitor_points, home_team, home_points)
+                break
+            
+            break
 
             
             
@@ -42,7 +61,7 @@ def main():
 
 
     """
-    df = pd.read_csv('nba_trial.csv')
+    df = pd.read_csv('nba_results.csv')
 
     df['date'] = pd.to_datetime(df['date_played'], format='%Y-%m-%d')
 
@@ -75,5 +94,8 @@ def main():
 
     print(df_ratings)"""
 
+def main():
+    scrape()
+    
 if __name__ == "__main__":
     main()
